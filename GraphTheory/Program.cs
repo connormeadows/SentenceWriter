@@ -33,7 +33,7 @@ namespace GraphTheory
             wordOne = nOne;
             wordTwo = nTwo;
             frequency = freq;
-        }
+        } 
 
         public Node(Node previous)
         {
