@@ -198,7 +198,7 @@ namespace GraphTheory
             foreach( FileInfo fi in files)
             {
                 string prev = "";
-                Console.WriteLine(fi);
+                Console.WriteLine("Reading file {0}",fi);
 
                 string[] lines = System.IO.File.ReadAllLines(fi.ToString());
                 foreach(string l in lines)
@@ -235,7 +235,6 @@ namespace GraphTheory
                     return string.Format("\"{0}\" is not in the passage.", current);
                 }
 
-                Console.WriteLine(current);
                 int row = indices[current];
                 var probable = (p: 0, s: "");
                 for(int i = 0; i < max; i++)
@@ -244,18 +243,15 @@ namespace GraphTheory
                     if (adjMat[emRow, i] != null && probable.p == 0)
                     {
                         probable.s = adjMat[emRow, i].GetSecond();
-                        Console.WriteLine("The probable.s is {0}, length: {1}", probable.s, probable.s.Length);
                     }
                     if(adjMat[row, i] != null && adjMat[row, i].getFrequency() > probable.p && !str.Contains(adjMat[row, i].GetSecond()))
                     {
                         probable = (p: adjMat[row, i].getFrequency(), s: adjMat[row, i].GetSecond());
-                        Console.WriteLine("This one SHOULD be setting. p: {0}, s: {1}", probable.p, probable.s);
                     }
                 }
 
                 str += " " + probable.s;
                 current = probable.s;
-                Console.WriteLine("Current is set to {0}", current);
             }
 
             return str;
@@ -331,16 +327,25 @@ namespace GraphTheory
             Console.WriteLine("Enter the path to the folder where you want the output to go");
             string outputFolder = Console.ReadLine();
 
-            Console.WriteLine("What word do you want to start your sentence with?");
-            string startWord = Console.ReadLine();
-
-            Console.WriteLine("What length do you want the sentence to be?");
-            int num = Int32.Parse(Console.ReadLine());
-
             g.ReadCSV(pathWay);
 
+            string startWord = "";
+            int num = 0;
+            string outp = "";
+            
+            while(startWord != "breakExecution")
+            {
+                Console.WriteLine("What word do you want to start your sentence with?");
+                startWord = Console.ReadLine();
+
+                Console.WriteLine("What length do you want the sentence to be?");
+                num = Int32.Parse(Console.ReadLine());
+
+                outp += "\n" + g.ProduceWord(num, startWord) + "\n";
+            }
+            
             string filename = string.Format("{1}/{0:yyyy-MM-dd_hh-mm-ss-tt}.txt", DateTime.Now, outputFolder);
-            System.IO.File.WriteAllText(@"" + filename, g.ProduceWord(num, startWord));
+            System.IO.File.WriteAllText(@"" + filename, outp);
             //System.IO.File.WriteAllText(@"C:\Users\Conno\OneDrive\Professional\SampleTxts\OutputFolder\" + filename, g.ProduceWord(53, "old"));
         }
     }
